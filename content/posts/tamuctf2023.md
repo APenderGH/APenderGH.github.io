@@ -58,8 +58,10 @@ Partial RELRO   Canary found      NX enabled    DSO             No RPATH   No RU
 ```
 The notable missing protections are `RELRO` and `PIE` on the `bank` binary. That means there's no address randomisation and we can freely overwrite GOT entries.
 So the plan is straight forward from here.
+
 1. Find the GOT entry that points to `puts` in libc (We know there's an entry for `puts` since the binary uses it and there's no PIE so we just have to check the binary for where that entry is)
 2. Use `deposit()` to add whatever offset we need to get to a function like `system()`
+
 The only issue now is that we need to pass a command to `system()` when it gets called. I think the best option would be to overwrite a string that `puts()` uses to include `;/bin/sh`. Luckily there's an exit message that gets defined in the `bank` binary and is called at the end of the program.
 ```c
 #include <stdio.h>

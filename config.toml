@@ -66,7 +66,7 @@ languageName = "English"
 
 # Footer config
   [params.footer]
-    enable = true
+    enable = false
     # LoveIt NEW | 0.2.0 Custom content (HTML format is supported)
     custom = ''
     # LoveIt NEW | 0.2.0 whether to show Hugo and theme info
@@ -74,7 +74,7 @@ languageName = "English"
     # LoveIt NEW | 0.2.0 whether to show copyright info
     copyright = false
     # LoveIt NEW | 0.2.0 whether to show the author
-    author = true
+    author = false
     # Site creation time
     since = 2023
     # ICP info only in China (HTML format is supported)
@@ -113,7 +113,7 @@ languageName = "English"
       defaultHiddenFromHomePage = false
 
   [params.social]
-    GitHub = "https://github.com/APenderGH"
+    GitHub = "APenderGH"
 
   # LoveIt CHANGED | 0.2.0 Page global config
   [params.page]

